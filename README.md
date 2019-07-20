@@ -5,3 +5,7 @@ Brownie is an offline object detection app for M5StickV that will tell you the n
 
 ## How to setup
 Place all files under the src directory of this repository in the root directory of the microSD card and insert them into the M5StackV. That's all!
+
+Or, you can use below:
+
+https://github.com/ksasao/brownie/releases/download/v1.0/brownie_v1.0.zip
