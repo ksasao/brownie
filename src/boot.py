@@ -1,4 +1,5 @@
 import audio
+import gc
 import image
 import lcd
 import sensor
@@ -132,26 +133,27 @@ fore_color = rgb888_to_rgb565(119,48,48)
 back_color = rgb888_to_rgb565(250,205,137)
 try:
     while(True):
+        #gc.collect()
         img = sensor.snapshot()
         code = kpu.run_yolo2(task, img)
         if code:
+            max_id = 0
+            max_rect = 0
             for i in code:
                 img.draw_rectangle(i.rect())
-                lcd.display(img)
-                max_id = 0
-                max_rect = 0
-                for i in code:
-                    text = ' ' + classes[i.classid()] + ' (' + str(int(i.value()*100)) + '%) '
-                    lcd.draw_string(i.x(), i.y(), text, fore_color, back_color)
-                    id = i.classid()
-                    rect_size = i.w() * i.h()
-                    if rect_size > max_rect:
-                        max_rect = rect_size
-                        max_id = id
-                if but_a.value() == 0:
-                    play_sound("/sd/voice/ja/"+str(max_id)+".wav")
-        else:
-            lcd.display(img)
+                text = ' ' + classes[i.classid()] + ' (' + str(int(i.value()*100)) + '%) '
+                for x in range(-1,2):
+                    for y in range(-1,2):
+                        img.draw_string(x+i.x(), y+i.y()+(i.h()>>1), text, color=(250,205,137), scale=2,mono_space=False)
+                img.draw_string(i.x(), i.y()+(i.h()>>1), text, color=(119,48,48), scale=2,mono_space=False)
+                id = i.classid()
+                rect_size = i.w() * i.h()
+                if rect_size > max_rect:
+                    max_rect = rect_size
+                    max_id = id
+            if but_a.value() == 0:
+                play_sound("/sd/voice/ja/"+str(max_id)+".wav")
+        lcd.display(img)
 except KeyboardInterrupt:
     kpu.deinit(task)
     sys.exit()
