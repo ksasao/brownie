@@ -1,14 +1,13 @@
-import lcd
+import audio
 import image
+import lcd
+import sensor
 import time
 import uos
-from Maix import I2S, GPIO
-import audio
-from Maix import GPIO
-from fpioa_manager import *
-import sensor
 import KPU as kpu
+from fpioa_manager import *
 from machine import I2C
+from Maix import I2S, GPIO
 
 #
 # initialize
@@ -68,16 +67,19 @@ def play_sound(filename):
         pass
 
 def set_backlight(level):
-    val = ((level & 0x7)+7) << 4
+    if level > 8:
+        level = 8
+    if level < 0:
+        level = 0
+    val = (level+7) << 4
     i2c.writeto_mem(0x34, 0x91,int(val))
-    
+
 def show_logo():
     try:
-        i2c.writeto_mem(0x34, 0x91,b'\xf0')  # maximum
         img = image.Image("/sd/logo.jpg")
         set_backlight(0)
         lcd.display(img)
-        for i in range(8):
+        for i in range(9):
             set_backlight(i)
             time.sleep(0.1)
         play_sound("/sd/logo.wav")
@@ -106,7 +108,6 @@ def initialize_camera():
 # main
 #
 show_logo()
-time.sleep(0.5) # Delay for few seconds to see the start-up screen :p
 if but_a.value() == 0: #If dont want to run the demo
     sys.exit()
 initialize_camera()
