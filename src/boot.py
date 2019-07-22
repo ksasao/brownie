@@ -116,6 +116,7 @@ def rgb888_to_rgb565(r,g,b):
 #
 show_logo()
 if but_a.value() == 0: #If dont want to run the demo
+    set_backlight(0)
     print('[info]: Exit by user operation')
     sys.exit()
 initialize_camera()
