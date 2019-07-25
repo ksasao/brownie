@@ -3,6 +3,7 @@ import gc
 import image
 import lcd
 import sensor
+import sys
 import time
 import uos
 import KPU as kpu
