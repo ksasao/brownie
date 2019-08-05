@@ -9,7 +9,8 @@ Brownie (ブラウニー) はオフラインで物体検出を行う M5StickV �
 
 1. このリポジトリの src ディレクトリ以下にあるすべてのファイルを、SDカードのルートディレクトリにコピーしてください。下記のZIPファイルを利用することも可能です。
 
-- https://github.com/ksasao/brownie/releases/download/v1.0/brownie_v1.0.zip
+- https://github.com/ksasao/brownie/releases/download/1.0.1/brownie_v1.0.1.zip
+- [すべてのバージョン](https://github.com/ksasao/brownie/releases)
 
 2. microSDカードを M5StickV に挿入してください。
 
