@@ -102,7 +102,7 @@ try:
         fmap = kpu.forward(task, img)
         plist=fmap[:]
         name,dist = get_nearest(feature_list,plist)
-        if dist < 200:
+        if dist < 200 and name != "exclude":
             img.draw_rectangle(1,46,222,132,color=br.get_color(0,255,0),thickness=3)
             img.draw_string(2,47 +10,  "%s"%(name))
             if old_name != name:
