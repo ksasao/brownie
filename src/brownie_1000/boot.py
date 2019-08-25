@@ -126,6 +126,7 @@ task = kpu.load("/sd/model/mbnet751.kmodel")
 
 print('[info]: Started.')
 but_stu = 1
+isButtonPressedA = 0
 
 fore_color = rgb888_to_rgb565(119,48,48)
 back_color = rgb888_to_rgb565(250,205,137)
@@ -141,8 +142,11 @@ try:
         print(max_id,pmax)
         if pmax > 0.35:
             img.draw_rectangle(1,46,222,132,color=border_color,thickness=3)
-            if but_a.value() == 0:
+            if but_a.value() == 0 and isButtonPressedA == 0:
                 play_sound("/sd/voice/ja/i1000-"+str(max_id)+".wav")
+                isButtonPressedA = 1
+        if but_a.value() == 1:
+            isButtonPressedA = 0
         lcd.display(img)
 except KeyboardInterrupt:
     kpu.deinit(task)

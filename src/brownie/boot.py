@@ -129,6 +129,8 @@ kpu.init_yolo2(task_face, 0.5, 0.3, 5, anchor)
 print('[info]: Started.')
 but_stu = 1
 
+isButtonPressedA = 0
+
 try:
     while(True):
         #gc.collect()
@@ -151,9 +153,11 @@ try:
                 if rect_size > max_rect:
                     max_rect = rect_size
                     max_id = id
-            if but_a.value() == 0:
+            if but_a.value() == 0  and isButtonPressedA == 0:
                 play_sound("/sd/voice/ja/"+str(max_id)+".wav")
-
+                isButtonPressedA = 1
+        if but_a.value() == 1:
+            isButtonPressedA = 0
         if code_face: # face detected
             max_id = 0
             max_rect = 0
