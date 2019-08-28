@@ -117,7 +117,6 @@ try:
         img.draw_string(2,47,  "%.2f "%(dist))
         lcd.display(img)
         kpu.fmap_free(fmap)
-        sys.exit()
 except KeyboardInterrupt:
     kpu.deinit(task)
     sys.exit()
