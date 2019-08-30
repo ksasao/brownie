@@ -23,8 +23,11 @@ def get_nearest(feature_list,feature):
     name = ''
     for n,vec in feature_list:
         dist = 0
-        for i in range(768):
-            dist = dist + (feature[i]-vec[i])*(feature[i]-vec[i])
+        for i in range(0,768,3):
+            dist = (dist
+               + (feature[i]-vec[i])**2
+               + (feature[i+1]-vec[i+1])**2
+               + (feature[i+2]-vec[i+2])**2)
         if dist < nearest:
             nearest = dist
             name = n
@@ -75,6 +78,8 @@ info=kpu.netinfo(task)
 #a=kpu.set_layers(task,29)
 
 old_name=''
+
+clock = time.clock()
 try:
     while(True):
         img = sensor.snapshot()
@@ -94,6 +99,8 @@ try:
                 feature_list.append([name,feature[:]])
                 save(feature_file, feature_list)
                 br.play_sound("/sd/set.wav")
+                gc.collect()
+                # print(gc.mem_free())
                 kpu.fmap_free(feature)
             print("QR: " + name)
             continue
@@ -101,7 +108,9 @@ try:
         # inference
         fmap = kpu.forward(task, img)
         plist=fmap[:]
+        clock.tick()
         name,dist = get_nearest(feature_list,plist)
+        #print(clock.fps())
         if dist < 200 and name != "exclude":
             img.draw_rectangle(1,46,222,132,color=br.get_color(0,255,0),thickness=3)
             img.draw_string(2,47 +10,  "%s"%(name))
