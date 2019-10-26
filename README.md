@@ -2,6 +2,8 @@ English/[日本語](README.ja.md)
 # Brownie
 Brownie is an offline object detection app for M5StickV that will tell you the name of the object in a cute voice!
 
+- Download [Maker Faire Taipei 2019 Kit](https://github.com/ksasao/brownie/releases/tag/v2.0)!
+
 [![Tweet](https://user-images.githubusercontent.com/179872/61575967-48284000-ab0e-11e9-9309-c4792fd5a473.png)](https://twitter.com/ksasao/status/1151984910703288321)
 
 ## How to setup
