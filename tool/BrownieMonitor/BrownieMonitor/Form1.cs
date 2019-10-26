@@ -216,5 +216,14 @@ namespace BrownieMonitor
                 }
             }
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(this.serialPort1 != null && this.serialPort1.IsOpen)
+            {
+                this.serialPort1.Close();
+                this.serialPort1.Dispose();
+            }
+        }
     }
 }

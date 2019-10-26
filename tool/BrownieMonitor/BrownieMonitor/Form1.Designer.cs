@@ -33,27 +33,27 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelInfo = new System.Windows.Forms.Label();
             this.textBoxCOMPort = new System.Windows.Forms.TextBox();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.dataGridViewCommand = new System.Windows.Forms.DataGridView();
+            this.ifDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.thenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commandItemBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.labelInfo = new System.Windows.Forms.Label();
-            this.ifDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.thenDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.commandItemBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCommand)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandItemBindingSource2)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.commandItemBindingSource2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -67,6 +67,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1676, 155);
             this.panel1.TabIndex = 0;
+            // 
+            // labelInfo
+            // 
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Font = new System.Drawing.Font("源ノ角ゴシック JP Bold", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelInfo.Location = new System.Drawing.Point(333, 29);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(112, 95);
+            this.labelInfo.TabIndex = 3;
+            this.labelInfo.Text = "---";
             // 
             // textBoxCOMPort
             // 
@@ -156,6 +166,26 @@
             this.dataGridViewCommand.Size = new System.Drawing.Size(1676, 500);
             this.dataGridViewCommand.TabIndex = 2;
             // 
+            // ifDataGridViewTextBoxColumn
+            // 
+            this.ifDataGridViewTextBoxColumn.DataPropertyName = "If";
+            this.ifDataGridViewTextBoxColumn.HeaderText = "If";
+            this.ifDataGridViewTextBoxColumn.MinimumWidth = 10;
+            this.ifDataGridViewTextBoxColumn.Name = "ifDataGridViewTextBoxColumn";
+            this.ifDataGridViewTextBoxColumn.Width = 118;
+            // 
+            // thenDataGridViewTextBoxColumn
+            // 
+            this.thenDataGridViewTextBoxColumn.DataPropertyName = "Then";
+            this.thenDataGridViewTextBoxColumn.HeaderText = "Then";
+            this.thenDataGridViewTextBoxColumn.MinimumWidth = 10;
+            this.thenDataGridViewTextBoxColumn.Name = "thenDataGridViewTextBoxColumn";
+            this.thenDataGridViewTextBoxColumn.Width = 214;
+            // 
+            // commandItemBindingSource2
+            // 
+            this.commandItemBindingSource2.DataSource = typeof(BrownieMonitor.CommandItem);
+            // 
             // serialPort1
             // 
             this.serialPort1.BaudRate = 115200;
@@ -193,36 +223,6 @@
             this.splitContainer1.SplitterDistance = 500;
             this.splitContainer1.TabIndex = 3;
             // 
-            // labelInfo
-            // 
-            this.labelInfo.AutoSize = true;
-            this.labelInfo.Font = new System.Drawing.Font("源ノ角ゴシック JP Bold", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelInfo.Location = new System.Drawing.Point(333, 29);
-            this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(112, 95);
-            this.labelInfo.TabIndex = 3;
-            this.labelInfo.Text = "---";
-            // 
-            // ifDataGridViewTextBoxColumn
-            // 
-            this.ifDataGridViewTextBoxColumn.DataPropertyName = "If";
-            this.ifDataGridViewTextBoxColumn.HeaderText = "If";
-            this.ifDataGridViewTextBoxColumn.MinimumWidth = 10;
-            this.ifDataGridViewTextBoxColumn.Name = "ifDataGridViewTextBoxColumn";
-            this.ifDataGridViewTextBoxColumn.Width = 118;
-            // 
-            // thenDataGridViewTextBoxColumn
-            // 
-            this.thenDataGridViewTextBoxColumn.DataPropertyName = "Then";
-            this.thenDataGridViewTextBoxColumn.HeaderText = "Then";
-            this.thenDataGridViewTextBoxColumn.MinimumWidth = 10;
-            this.thenDataGridViewTextBoxColumn.Name = "thenDataGridViewTextBoxColumn";
-            this.thenDataGridViewTextBoxColumn.Width = 214;
-            // 
-            // commandItemBindingSource2
-            // 
-            this.commandItemBindingSource2.DataSource = typeof(BrownieMonitor.CommandItem);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
@@ -232,16 +232,17 @@
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "Brownie Monitor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCommand)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandItemBindingSource2)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.commandItemBindingSource2)).EndInit();
             this.ResumeLayout(false);
 
         }
