@@ -33,21 +33,6 @@ def get_nearest(feature_list,feature):
             name = n
     return name,nearest
 
-def get_unit_vector(vec):
-    sum_vec = 0
-    unit_vec = []
-    for i in range(768):
-        sum_vec = sum_vec + vec[i] * vec[i]
-    sum_vec = math.sqrt(sum_vec)
-    for i in range(768):
-        unit_vec.append(vec[i]/sum_vec)
-    return unit_vec
-
-def get_angle(unit_vec1,unit_vec2):
-    sum_vec = 0
-    for i in range(768):
-        sum_vec = sum_vec + unit_vec1[i] * unit_vec2[i]
-    return math.acos(sum_vec)*180.0/math.pi
 def get_dist(a,b,p):
     u = 0
     l = 0
