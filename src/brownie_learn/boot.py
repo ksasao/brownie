@@ -52,8 +52,8 @@ def get_dist(a,b,p):
     u = 0
     l = 0
     for i in range(768):
-        u = u + (p[i]-a[i])
-        l = l + (b[i]-a[i])
+        u = u + (p[i]-a[i])*(b[i]-a[i])
+        l = l + (b[i]-a[i])*(b[i]-a[i])
     return u / l
 
 def load(filename):
