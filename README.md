@@ -19,6 +19,9 @@ Or, you can use below:
 
 That's all!
 
+### Doesn’t it work?
+- It has confirmed that it does not work correctly using the latest firmware as of November 2019. Download maixpy_v0.4.0_47_g39bb8bf_m5stickv.bin on http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.4.0_47_g39bb8bf , and write it using the [
+kflash_gui](https://github.com/sipeed/kflash_gui) (Windows/Mac/Linux).
 
 ## How to play
 Aim the camera and press the A button (largest one)
