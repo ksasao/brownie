@@ -1,3 +1,9 @@
+#
+# Brownie Learn
+# 
+# Firmware: maixpy_v0.5.0_0_gae433e8_m5stickv.bin
+# http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_0_gae433e8
+#
 import brownie as br
 import KPU as kpu
 import sensor
@@ -5,6 +11,14 @@ import lcd
 import time
 import uos
 import gc
+from Maix import utils
+utils.gc_heap_size(300000)
+
+# for Grove Port
+from machine import UART
+fm.register(35, fm.fpioa.UART2_TX, force=True)
+fm.register(34, fm.fpioa.UART2_RX, force=True)
+uart_Port = UART(UART.UART2, 115200,8,0,0, timeout=1000, read_buf_len= 4096)
 
 def get_feature(task):
     count = 20
@@ -76,16 +90,21 @@ def save(filename,feature_list):
                 f.write('\n')
     except:
         print("write error.")
+
+def send_packet(message):
+    data_packet = bytearray(message+'\x00')
+    uart_Port.write(data_packet)
 #
 # main
 #
 br.show_logo()
 br.exit_check()
-br.initialize_camera()
 
 feature_file = "/sd/features.csv"
 feature_list,feature_0,feature_100 = load(feature_file)
 task = kpu.load("/sd/model/mbnet751_feature.kmodel")
+
+br.initialize_camera()
 
 print('[info]: Started.')
 
@@ -148,6 +167,7 @@ try:
             if old_name != name:
                 print("[DETECTED]: " + name)
                 lcd.display(img)
+                send_packet(name)
                 br.play_sound("/sd/voice/"+name+".wav")
                 old_name = name
         else:
