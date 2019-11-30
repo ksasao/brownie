@@ -1,0 +1,14 @@
+{
+  "name": "web-app-test",
+  "version": "0.0.0",
+  "description": "WebAppTest",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "log4js": "^6.1.0",
+    "serialport": "^8.0.5",
+    "socket.io": "^2.3.0"
+  }
+}

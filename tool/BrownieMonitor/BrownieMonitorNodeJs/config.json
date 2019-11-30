@@ -1,0 +1,14 @@
+{
+  "comPort": "COM4",
+  "serverPort": 3000,
+  "rules": [
+    {
+      "if": "lost",
+      "then": "start ./contents/modoshite.wav"
+    },
+    {
+      "if": "found",
+      "then": "start ./contents/doumodesu.wav"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "appenders": {
+    "default": { "type": "console" },
+    "system": {
+      "type": "dateFile",
+      "filename": "logs/system",
+      "pattern": "yyyyMMdd.log",
+      "alwaysIncludePattern": true
+    },
+    "detected": {
+      "type": "dateFile",
+      "filename": "logs/detected",
+      "pattern": "yyyyMMdd.log",
+      "alwaysIncludePattern": true
+    },
+    "error": {
+      "type": "dateFile",
+      "filename": "logs/error",
+      "pattern": "yyyyMMdd.log",
+      "alwaysIncludePattern": true
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": ["default" ],
+      "level": "info"
+    },
+    "system": {
+      "appenders": [ "system" ],
+      "level": [ "info" ]
+    },
+    "detected": {
+      "appenders": [ "detected" ],
+      "level": [ "info" ]
+    },
+    "error": {
+      "appenders": [ "error" ],
+      "level": [ "info" ]
+    }
+  }
+}
