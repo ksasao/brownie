@@ -1,10 +1,17 @@
 {
-  "name": "web-app-test",
-  "version": "0.0.0",
-  "description": "WebAppTest",
+  "name": "brownie_monitor",
+  "version": "0.0.1",
+  "description": "This app monitors what Brownie detects an object, and execute a command that is associated with the object name.",
   "main": "server.js",
   "author": {
-    "name": ""
+    "name": "ksasao"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ksasao/brownie.git",
+    "path": "tree/master/tool/BrownieMonitor/BrownieMonitorNodeJs"
+
   },
   "dependencies": {
     "log4js": "^6.1.0",
