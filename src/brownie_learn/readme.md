@@ -2,8 +2,8 @@
 Brownie Learn is an app that can learn your objects.
 
 ## How to setup
-1. update firmware to maixpy_v0.4.0_31_gc1d8a43_m5stickv.bin
-http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.4.0_31_gc1d8a43/
+1. update firmware to maixpy_v0.5.0_0_gae433e8_m5stickv.bin
+http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_0_gae433e8/
 2. Copy files in src directory into microSD card
 3. run!
 
