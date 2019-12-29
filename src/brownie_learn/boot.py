@@ -12,11 +12,13 @@ import time
 import uos
 import gc
 import ulab as np
+from fpioa_manager import *
 from Maix import utils
+from machine import UART
+
 utils.gc_heap_size(250000)
 
 # for Grove Port
-from machine import UART
 fm.register(35, fm.fpioa.UART2_TX, force=True)
 fm.register(34, fm.fpioa.UART2_RX, force=True)
 uart_Port = UART(UART.UART2, 115200,8,0,0, timeout=1000, read_buf_len= 4096)
@@ -34,28 +36,27 @@ def get_feature(task):
     return np.array(feature[:])
 
 def get_nearest(feature_list,feature):
-    nearest = 10000
+    min_dist = 10000
     name = ''
-    for n,vec in feature_list:
-        dist = np.sum((vec-feature)*(vec-feature))
-        if dist < nearest:
-            nearest = dist
+    vec = []
+    for n,v in feature_list:
+        dist = np.sum((v-feature)*(v-feature))
+        if dist < min_dist:
+            min_dist = dist
             name = n
-    return name,nearest
-def get_nearest_vector(feature_list,feature):
-    nearest = 10000
-    arg = 0
-    for n,vec in enumerate(feature_list):
-        dist = np.sum((vec[1]-feature)*(vec[1]-feature))
-        if dist < nearest:
-            nearest = dist
-            arg = n
-    return feature_list[arg]
+            vec = v
+    return name,min_dist,vec
 
 def get_dist(a,b,p):
     u = np.sum((p-a)*(b-a))
     l = np.sum((b-a)*(b-a))
-    return u / l
+    t = u / l
+    x = a + (b-a) * t
+    dist = np.sum((p-x)*(p-x))
+    if dist > 200.0:
+        return 50.0
+    else:
+        return t
 
 def load(filename):
     feature_list=[]
@@ -149,23 +150,25 @@ try:
 
         # inference
         fmap = kpu.forward(task, img)
-        plist=np.array(fmap[:])
-        clock.tick()
+        p = np.array(fmap[:])
+
+        # get ratio between feature0 and feature100
         if len(feature_0)>0 and len(feature_100)>0:
-            p = plist
-            f0 = get_nearest_vector(feature_0,p)
-            f100 = get_nearest_vector(feature_100,p)
-            dist = 100.0 * get_dist(f0[1],f100[1],p)
+            _,_,f0 = get_nearest(feature_0,p)
+            _,_,f100 = get_nearest(feature_100,p)
+            dist = 100.0 * get_dist(f0,f100,p)
             dist_str = "%.1f"%(dist)
+
             print("[DISTANCE]: " + dist_str)
-            img.draw_string(2,47,  dist_str,scale=3)
+            img.draw_string(2, 47, dist_str, scale=3)
             lcd.display(img)
             continue
-        name,dist = get_nearest(feature_list,plist)
-        #print(clock.fps())
+
+        # get nearest target
+        name,dist,_ = get_nearest(feature_list,p)
         if dist < 200 and name != "*exclude":
             img.draw_rectangle(1,46,222,132,color=br.get_color(0,255,0),thickness=3)
-            img.draw_string(2,47 +30,  "%s"%(name),scale=3)
+            img.draw_string(2, 47 +30, "%s"%(name), scale=3)
             if old_name != name:
                 print("[DETECTED]: " + name)
                 lcd.display(img)
