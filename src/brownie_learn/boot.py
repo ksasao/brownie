@@ -1,8 +1,8 @@
 #
 # Brownie Learn
-# 
-# Firmware: maixpy_v0.5.0_0_gae433e8_m5stickv.bin
-# http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_0_gae433e8
+#
+# Firmware: maixpy_v0.5.0_9_g8eba07d_m5stickv.bin
+# http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_9_g8eba07d
 #
 import brownie as br
 import KPU as kpu
@@ -11,8 +11,9 @@ import lcd
 import time
 import uos
 import gc
+import ulab as np
 from Maix import utils
-utils.gc_heap_size(300000)
+utils.gc_heap_size(250000)
 
 # for Grove Port
 from machine import UART
@@ -30,29 +31,21 @@ def get_feature(task):
             lcd.display(img)
     time.sleep(1.0)
     feature = kpu.forward(task,img)
-    return feature
+    return np.array(feature[:])
 
 def get_nearest(feature_list,feature):
     nearest = 10000
     name = ''
     for n,vec in feature_list:
-        dist = 0
-        for i in range(0,768,3):
-            dist = (dist
-               + (feature[i]-vec[i])**2
-               + (feature[i+1]-vec[i+1])**2
-               + (feature[i+2]-vec[i+2])**2)
+        dist = np.sum((vec-feature)*(vec-feature))
         if dist < nearest:
             nearest = dist
             name = n
     return name,nearest
 
 def get_dist(a,b,p):
-    u = 0
-    l = 0
-    for i in range(768):
-        u = u + (p[i]-a[i])*(b[i]-a[i])
-        l = l + (b[i]-a[i])*(b[i]-a[i])
+    u = np.sum((p-a)*(b-a))
+    l = np.sum((b-a)*(b-a))
     return u / l
 
 def load(filename):
@@ -67,11 +60,11 @@ def load(filename):
                 n = str(li[0])
                 vec = [float(v) for v in li[1:]]
                 if n == '0':
-                    feature_0.append([n,get_unit_vec(vec)])
+                    feature_0.append([n,np.array(vec)])
                 elif n == '100':
-                    feature_100.append([n,get_unit_vec(vec)])
+                    feature_100.append([n,np.array(vec)])
                 else:
-                    feature_list.append([n,vec])
+                    feature_list.append([n,np.array(vec)])
                 li = f.readline()
     except:
         print("no data.")
@@ -132,11 +125,11 @@ try:
             else:
                 br.play_sound("/sd/camera.wav")
                 feature = get_feature(task)
-                feature_list.append([name,feature[:]])
+                feature_list.append([name,feature])
                 if name=='0':
-                    feature_0.append([name,feature[:]])
+                    feature_0.append([name,feature])
                 if name=='100':
-                    feature_100.append([name,feature[:]])
+                    feature_100.append([name,feature])
                 save(feature_file, feature_list)
                 br.play_sound("/sd/set.wav")
                 gc.collect()
@@ -147,7 +140,7 @@ try:
 
         # inference
         fmap = kpu.forward(task, img)
-        plist=fmap[:]
+        plist=np.array(fmap[:])
         clock.tick()
         if len(feature_0)>0 and len(feature_100)>0:
             p = plist
