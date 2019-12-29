@@ -42,6 +42,15 @@ def get_nearest(feature_list,feature):
             nearest = dist
             name = n
     return name,nearest
+def get_nearest_vector(feature_list,feature):
+    nearest = 10000
+    arg = 0
+    for n,vec in enumerate(feature_list):
+        dist = np.sum((vec[1]-feature)*(vec[1]-feature))
+        if dist < nearest:
+            nearest = dist
+            arg = n
+    return feature_list[arg]
 
 def get_dist(a,b,p):
     u = np.sum((p-a)*(b-a))
@@ -58,13 +67,13 @@ def load(filename):
             while li:
                 li = li.strip().split(',')
                 n = str(li[0])
-                vec = [float(v) for v in li[1:]]
+                vec = np.array([float(v) for v in li[1:]])
                 if n == '0':
-                    feature_0.append([n,np.array(vec)])
+                    feature_0.append([n,vec])
                 elif n == '100':
-                    feature_100.append([n,np.array(vec)])
+                    feature_100.append([n,vec])
                 else:
-                    feature_list.append([n,np.array(vec)])
+                    feature_list.append([n,vec])
                 li = f.readline()
     except:
         print("no data.")
@@ -144,8 +153,8 @@ try:
         clock.tick()
         if len(feature_0)>0 and len(feature_100)>0:
             p = plist
-            f0 = feature_0[0]
-            f100 = feature_100[0]
+            f0 = get_nearest_vector(feature_0,p)
+            f100 = get_nearest_vector(feature_100,p)
             dist = 100.0 * get_dist(f0[1],f100[1],p)
             dist_str = "%.1f"%(dist)
             print("[DISTANCE]: " + dist_str)
