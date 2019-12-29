@@ -9,9 +9,6 @@ from fpioa_manager import *
 from machine import I2C
 from Maix import I2S, GPIO
 
-#from Maix import utils
-#utils.gc_heap_size(200000)
-
 #
 # initialize
 #
@@ -103,7 +100,6 @@ def initialize_camera():
             time.sleep(0.1)
             continue
 
-    sensor.reset()
     sensor.set_pixformat(sensor.RGB565)
     sensor.set_framesize(sensor.QVGA) #QVGA=320x240
     sensor.set_windowing((224, 224))
