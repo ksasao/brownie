@@ -1,5 +1,5 @@
 {
-  "comPort": "COM4",
+  "comPort": "COM7",
   "serverPort": 3000,
   "rules": [
     {
