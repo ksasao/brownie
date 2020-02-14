@@ -29,7 +29,10 @@ def get_feature(task):
         for j in range(count):
             img = sensor.snapshot()
             if j < (count>>1):
+                br.led_r.value(0)
                 img.draw_rectangle(1,46,222,132,color=br.get_color(255,0,0),thickness=3)
+            else:
+                br.led_r.value((1))
             lcd.display(img)
     time.sleep(1.0)
     feature = kpu.forward(task,img)
@@ -176,6 +179,8 @@ try:
                 br.play_sound("/sd/voice/"+name+".wav")
                 old_name = name
         else:
+            if old_name != '':
+                send_packet('')
             old_name = ''
 
         # output
