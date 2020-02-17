@@ -15,6 +15,8 @@ import ulab as np
 from fpioa_manager import *
 from Maix import utils
 from machine import UART
+import ujson
+import uio
 
 utils.gc_heap_size(250000)
 
@@ -134,9 +136,13 @@ try:
                 feature_0 = []
                 feature_100 = []
                 save(feature_file, feature_list)
-                br.play_sound("/sd/reset.wav")
+                br.play_sound("/sd/system/reset.wav")
+            elif name[0]=="{":
+                br.play_sound("/sd/system/setting.wav")
+                send_packet(name)
+                continue
             else:
-                br.play_sound("/sd/camera.wav")
+                br.play_sound("/sd/system/camera.wav")
                 feature = get_feature(task)
                 feature_list.append([name,feature])
                 if name=='0':
@@ -144,7 +150,7 @@ try:
                 if name=='100':
                     feature_100.append([name,feature])
                 save(feature_file, feature_list)
-                br.play_sound("/sd/set.wav")
+                br.play_sound("/sd/system/set.wav")
                 gc.collect()
                 # print(gc.mem_free())
                 kpu.fmap_free(feature)

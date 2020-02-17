@@ -76,13 +76,13 @@ def set_backlight(level):
 
 def show_logo():
     try:
-        img = image.Image("/sd/logo.jpg")
+        img = image.Image("/sd/system/logo.jpg")
         set_backlight(0)
         lcd.display(img)
         for i in range(9):
             set_backlight(i)
             time.sleep(0.1)
-        play_sound("/sd/logo.wav")
+        play_sound("/sd/system/logo.wav")
 
     except:
         lcd.draw_string(lcd.width()//2-100,lcd.height()//2-4, "Error: Cannot find logo.jpg", lcd.WHITE, lcd.RED)
