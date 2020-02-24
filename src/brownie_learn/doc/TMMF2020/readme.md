@@ -1,5 +1,5 @@
 # Brownie TMMF 2020
-Tsukuba Mini Maker Faire 2020 で頒布した Brownie の使い方ドキュメントです。
+Tsukuba Mini Maker Faire 2020 で頒布した Brownie の使い方ドキュメントです。関連ファイル一式が[Tsukuba Mini Maker Faire 2020 Kit](https://github.com/ksasao/brownie/releases/tag/v2.1)にあります。
 
 ## Brownie とは
 Brownie は QRコードを使って簡単に画像を学習し、その画像に応じてさまざまな動作をさせることができる AI カメラです。カメラ単独でも利用できるほか、Windows / Mac / Linux / Raspberry Pi のコマンドの実行、IFTTT連携もでき、Arduino などにもつながります。
