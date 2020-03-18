@@ -11,11 +11,10 @@
     "type": "git",
     "url": "https://github.com/ksasao/brownie.git",
     "path": "tree/master/tool/BrownieMonitor/BrownieMonitorNodeJs"
-
   },
   "dependencies": {
-    "log4js": "^6.1.0",
-    "serialport": "^8.0.5",
+    "log4js": "^6.1.2",
+    "serialport": "^8.0.7",
     "socket.io": "^2.3.0"
   }
 }
