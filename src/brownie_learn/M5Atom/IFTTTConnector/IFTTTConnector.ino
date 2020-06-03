@@ -89,8 +89,6 @@ void setup() {
 }
 
 void loop() {
-  M5.update();
-  
   if (Serial1.available()) {
     char d = Serial1.read();
     rx_buffer[rx_buffer_pointer] = d;
@@ -119,6 +117,7 @@ void loop() {
       }
     }
   }
+  M5.update();
 }
 
 void http_get(String url){
@@ -162,7 +161,7 @@ void wifi_update(StaticJsonDocument<MAX_JSON_BUFFER_SIZE> doc){
       preferences.putString("ssid",ssid);
       preferences.putString("pass",pass);
       preferences.putString("ifttt",ifttt);
-      preferences.end();
+      preferences.end() ;
       delay(2000);
       ESP.restart();
   }else{
