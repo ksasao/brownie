@@ -8,6 +8,7 @@ import uos
 from fpioa_manager import *
 from machine import I2C
 from Maix import I2S, GPIO
+from modules import ws2812
 
 #
 # initialize
@@ -15,41 +16,55 @@ from Maix import I2S, GPIO
 lcd.init()
 lcd.rotation(2)
 i2c = I2C(I2C.I2C0, freq=400000, scl=28, sda=29)
-
-fm.register(board_info.SPK_SD, fm.fpioa.GPIO0)
-spk_sd=GPIO(GPIO.GPIO0, GPIO.OUT)
-spk_sd.value(1) #Enable the SPK output
-
-fm.register(board_info.SPK_DIN,fm.fpioa.I2S0_OUT_D1)
-fm.register(board_info.SPK_BCLK,fm.fpioa.I2S0_SCLK)
-fm.register(board_info.SPK_LRCLK,fm.fpioa.I2S0_WS)
-
 wav_dev = I2S(I2S.DEVICE_0)
+class_ws2812 = None
 
-fm.register(board_info.BUTTON_A, fm.fpioa.GPIO1)
-but_a=GPIO(GPIO.GPIO1, GPIO.IN, GPIO.PULL_UP) #PULL_UP is required here!
+# check if it runs on UnitV
+devices = i2c.scan()
+is_unitv = False
+if len(devices)==0:
+    is_unitv = True
 
-fm.register(board_info.BUTTON_B, fm.fpioa.GPIO2)
-but_b = GPIO(GPIO.GPIO2, GPIO.IN, GPIO.PULL_UP) #PULL_UP is required here!
+def stickv_init():
+    fm.register(board_info.SPK_SD, fm.fpioa.GPIO0)
+    spk_sd=GPIO(GPIO.GPIO0, GPIO.OUT)
+    spk_sd.value(1) #Enable the SPK output
 
-fm.register(board_info.LED_W, fm.fpioa.GPIO3)
-led_w = GPIO(GPIO.GPIO3, GPIO.OUT)
-led_w.value(1) #RGBW LEDs are Active Low
+    fm.register(board_info.SPK_DIN,fm.fpioa.I2S0_OUT_D1)
+    fm.register(board_info.SPK_BCLK,fm.fpioa.I2S0_SCLK)
+    fm.register(board_info.SPK_LRCLK,fm.fpioa.I2S0_WS)
 
-fm.register(board_info.LED_R, fm.fpioa.GPIO4)
-led_r = GPIO(GPIO.GPIO4, GPIO.OUT)
-led_r.value(1) #RGBW LEDs are Active Low
+    fm.register(board_info.BUTTON_A, fm.fpioa.GPIO1)
+    but_a=GPIO(GPIO.GPIO1, GPIO.IN, GPIO.PULL_UP) #PULL_UP is required here!
 
-fm.register(board_info.LED_G, fm.fpioa.GPIO5)
-led_g = GPIO(GPIO.GPIO5, GPIO.OUT)
-led_g.value(1) #RGBW LEDs are Active Low
+    fm.register(board_info.BUTTON_B, fm.fpioa.GPIO2)
+    but_b = GPIO(GPIO.GPIO2, GPIO.IN, GPIO.PULL_UP) #PULL_UP is required here!
 
-fm.register(board_info.LED_B, fm.fpioa.GPIO6)
-led_b = GPIO(GPIO.GPIO6, GPIO.OUT)
-led_b.value(1) #RGBW LEDs are Active Low
+    fm.register(board_info.LED_W, fm.fpioa.GPIO3)
+    led_w = GPIO(GPIO.GPIO3, GPIO.OUT)
+    led_w.value(1) #RGBW LEDs are Active Low
 
+    fm.register(board_info.LED_R, fm.fpioa.GPIO4)
+    led_r = GPIO(GPIO.GPIO4, GPIO.OUT)
+    led_r.value(1) #RGBW LEDs are Active Low
+
+    fm.register(board_info.LED_G, fm.fpioa.GPIO5)
+    led_g = GPIO(GPIO.GPIO5, GPIO.OUT)
+    led_g.value(1) #RGBW LEDs are Active Low
+
+    fm.register(board_info.LED_B, fm.fpioa.GPIO6)
+    led_b = GPIO(GPIO.GPIO6, GPIO.OUT)
+    led_b.value(1) #RGBW LEDs are Active Low
+
+def unitv_init():
+    global class_ws2812
+    class_ws2812 = ws2812(8,1)
+    class_ws2812.set_led(0,(32,16,0))
+    class_ws2812.display()
 
 def play_sound(filename):
+    if is_unitv:
+        return
     try:
         player = audio.Audio(path = filename)
         player.volume(100)
@@ -66,7 +81,24 @@ def play_sound(filename):
     except:
         pass
 
+def set_led(r,g,b):
+    lumi = 16
+    if is_unitv:
+        class_ws2812.set_led(0,(r * lumi, g * lumi, b * lumi))
+        class_ws2812.display()
+        return
+    else:
+        led_r = GPIO(GPIO.GPIO4, GPIO.OUT)
+        led_g = GPIO(GPIO.GPIO5, GPIO.OUT)
+        led_b = GPIO(GPIO.GPIO6, GPIO.OUT)
+
+        led_r.value(1-r)
+        led_g.value(1-g)
+        led_b.value(1-b)
+
 def set_backlight(level):
+    if is_unitv:
+        return
     if level > 8:
         level = 8
     if level < 0:
@@ -75,6 +107,8 @@ def set_backlight(level):
     i2c.writeto_mem(0x34, 0x91,int(val))
 
 def show_logo():
+    if is_unitv:
+        return
     try:
         img = image.Image("/sd/system/logo.jpg")
         set_backlight(0)
@@ -86,6 +120,11 @@ def show_logo():
 
     except:
         lcd.draw_string(lcd.width()//2-100,lcd.height()//2-4, "Error: Cannot find logo.jpg", lcd.WHITE, lcd.RED)
+
+def show_image(img):
+    if is_unitv:
+        return
+    lcd.display(img)
 
 def initialize_camera():
     err_counter = 0
@@ -100,6 +139,9 @@ def initialize_camera():
             time.sleep(0.1)
             continue
 
+    if is_unitv:
+        sensor.set_vflip(1)
+        sensor.set_hmirror(1)
     sensor.set_pixformat(sensor.RGB565)
     sensor.set_framesize(sensor.QVGA) #QVGA=320x240
     sensor.set_windowing((224, 224))
@@ -122,3 +164,9 @@ def get_color(r,g,b):
     hi = val >> 8
     lo = val & 0xff
     return (lo << 8) | hi
+
+# initialize
+if is_unitv:
+    unitv_init()
+else:
+    stickv_init()

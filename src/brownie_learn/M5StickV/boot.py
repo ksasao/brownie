@@ -1,13 +1,18 @@
 #
-# Brownie Learn
+# Brownie Learn for M5StickV / UnitV
 #
-# Firmware: maixpy_v0.5.0_9_g8eba07d_m5stickv.bin
-# http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_9_g8eba07d
+# Firmware:
+# https://docs.m5stack.com/#/en/quick_start/m5stickv/m5stickv_quick_start?id=m5stickv-quick-start
+# M5StickV_Firmware_v5.1.2.kfpkg
+#
+# or
+#
+# maixpy_v0.5.0_42_g458ed4e_m5stickv.bin
+# https://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_42_g458ed4e
 #
 import brownie as br
 import KPU as kpu
 import sensor
-import lcd
 import time
 import uos
 import gc
@@ -17,6 +22,7 @@ from Maix import utils
 from machine import UART
 import ujson
 import uio
+
 
 utils.gc_heap_size(250000)
 
@@ -31,11 +37,11 @@ def get_feature(task):
         for j in range(count):
             img = sensor.snapshot()
             if j < (count>>1):
-                br.led_r.value(0)
+                br.set_led(1,0,0)
                 img.draw_rectangle(1,46,222,132,color=br.get_color(255,0,0),thickness=3)
             else:
-                br.led_r.value((1))
-            lcd.display(img)
+                br.set_led(0,0,0)
+            br.show_image(img)
     time.sleep(1.0)
     feature = kpu.forward(task,img)
     return np.array(feature[:])
@@ -106,7 +112,7 @@ def send_packet(message):
 # main
 #
 br.show_logo()
-br.exit_check()
+# br.exit_check()
 
 feature_file = "/sd/features.csv"
 feature_list,feature_0,feature_100 = load(feature_file)
@@ -114,6 +120,7 @@ task = kpu.load("/sd/model/mbnet751_feature.kmodel")
 
 br.initialize_camera()
 
+print(feature_list)
 print('[info]: Started.')
 
 info=kpu.netinfo(task)
@@ -170,7 +177,8 @@ try:
 
             print("[DISTANCE]: " + dist_str)
             img.draw_string(2, 47, dist_str, scale=3)
-            lcd.display(img)
+            br.show_image(img)
+            br.set_led(0,0,1)
             continue
 
         # get nearest target
@@ -178,20 +186,22 @@ try:
         if dist < 200 and name != "*exclude":
             img.draw_rectangle(1,46,222,132,color=br.get_color(0,255,0),thickness=3)
             img.draw_string(2, 47 +30, "%s"%(name), scale=3)
+            br.set_led(0,1,0)
             if old_name != name:
                 print("[DETECTED]: " + name)
-                lcd.display(img)
+                br.show_image(img)
                 send_packet(name)
                 br.play_sound("/sd/voice/"+name+".wav")
                 old_name = name
         else:
+            br.set_led(0,0,0)
             if old_name != '':
                 send_packet('')
             old_name = ''
 
         # output
         img.draw_string(2,47,  "%.2f "%(dist),scale=3)
-        lcd.display(img)
+        br.show_image(img)
         kpu.fmap_free(fmap)
 except KeyboardInterrupt:
     kpu.deinit(task)
