@@ -116,6 +116,7 @@ br.show_logo()
 
 feature_file = "/sd/features.csv"
 feature_list,feature_0,feature_100 = load(feature_file)
+# load headless (doesn't have fully-connected layers) model 
 task = kpu.load("/sd/model/mbnet751_feature.kmodel")
 
 br.initialize_camera()
@@ -124,7 +125,9 @@ print(feature_list)
 print('[info]: Started.')
 
 info=kpu.netinfo(task)
-#a=kpu.set_layers(task,29)
+# if you use non-headless model (such as V-Training models),
+# uncomment below. 
+# a=kpu.set_layers(task,29)
 
 old_name=''
 marker_0_100=0
