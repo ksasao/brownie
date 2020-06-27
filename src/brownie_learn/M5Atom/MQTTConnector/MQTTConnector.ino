@@ -45,6 +45,7 @@ static void initialize_wifi()
 
 void setup() {
   M5.begin(true,false,true);
+  Serial.println();
   initialize_wifi();
   Serial1.begin(115200, SERIAL_8N1, 26, 32);
 }
@@ -57,6 +58,19 @@ void loop() {
     char d = Serial1.read();
     rx_buffer[rx_buffer_pointer] = d;
     if(d == 0){
+      // Validate for serial connection
+      bool isValid = true;
+      for(int i=0; i<rx_buffer_pointer;i++){
+        if(rx_buffer[i]<32 || rx_buffer[i]>127){
+          isValid = false;
+          break;
+        }
+      }
+      if(!isValid){
+        rx_buffer_pointer = 0;
+        return;
+      }
+      
       // Parse as JSON
       if(rx_buffer[0]=='{'){
         DeserializationError error = deserializeJson(doc, rx_buffer);

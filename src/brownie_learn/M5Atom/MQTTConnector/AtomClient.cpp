@@ -9,6 +9,7 @@ const char hex[17]="0123456789ABCDEF";
 char id[100];
 String name;
 char clientIdChar[50];
+bool wifiConnected = false;
 
 char msgBuffer[256];
 char topicBuffer[256];
@@ -22,6 +23,8 @@ PubSubClient mqttClient(wifiClient);
 
 const char mqttUserName[] = "";
 const char mqttPass[] = "";
+
+void reConnect(bool toReboot);
 
 // private methods
 void createClientId(String header){
@@ -77,21 +80,30 @@ void initWiFi(){
   // WiFi connection
   WiFi.begin(_ssid, _password);
   int count = 0;
+  wifiConnected = true;
   while( WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     blink_led(255,128,0,500,1);
     count++;
-    if(count > 100){
+    if(count > 10){
       error_led();
-      reboot();
+      wifiConnected = false;
+      break;
     }
   }
-  Serial.println("Connected.");
-  set_led(0,0,255);
-  mqttClient.setServer(_server, 1883); 
+  if(wifiConnected){
+    Serial.println("Connected.");
+    mqttClient.setServer(_server, 1883); 
+    reConnect(false);
+    set_led(0,0,255);
+  }else{
+    Serial.println();
+    Serial.println("Connection error. Check WiFi settings.");
+    set_led(255,255,0);
+  }
 }
 
-void reConnect() {
+void reConnect(bool toReboot) {
   int resetCounter = 0;
   while (!mqttClient.connected()) {
     set_led(255,255,0);
@@ -107,7 +119,6 @@ void reConnect() {
       while(mqttPass[i++]!='\0'){
         Serial.print("*");
       }
-      Serial.println();
     }
     else {
       error_led();
@@ -118,7 +129,12 @@ void reConnect() {
       delay(5000);
     }
     if(resetCounter++ >= 10){
-      reboot();
+      if(toReboot){
+        reboot();
+      }else{
+        wifiConnected = false;
+        return;
+      }
     }
   }
   set_led(0,0,0);
@@ -147,9 +163,16 @@ char* AtomClient::getClientId(void)
 }
 
 void AtomClient::reconnect(void){
-  reConnect();
+  if(!wifiConnected){
+    return;
+  }
+  reConnect(true);
   mqttClient.loop();
 }
 void AtomClient::publish(String topic, String body){
+  if(!wifiConnected){
+    set_led(255,255,0);
+    return;
+  }
   mqttPublish(topic,body);
 }

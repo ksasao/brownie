@@ -1,5 +1,5 @@
-#ifndef ATOM_CLIENT_H_INCLUDE
-#define ATOM_CLIENT_INCLUDE
+#ifndef __ATOM_CLIENT_H__
+#define __ATOM_CLIENT_H__
 
 class AtomClient {
   private:
