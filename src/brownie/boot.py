@@ -10,10 +10,13 @@ import KPU as kpu
 from fpioa_manager import *
 from machine import I2C
 from Maix import I2S, GPIO
+from Maix import utils
 
 #
 # initialize
 #
+utils.gc_heap_size(250000)
+
 lcd.init()
 lcd.rotation(2)
 i2c = I2C(I2C.I2C0, freq=400000, scl=28, sda=29)
@@ -118,13 +121,10 @@ initialize_camera()
 
 classes = ['aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor']
 task = kpu.load("/sd/model/20class.kmodel")
-task_face = kpu.load(0x300000) # default face detection model on flash memory
-# task_face = kpu.load("/sd/model/facedetect.kmodel") # you can extract the model from default .kfpkg
 
 anchor = (1.889, 2.5245, 2.9465, 3.94056, 3.99987, 5.3658, 5.155437, 6.92275, 6.718375, 9.01025)
 # Anchor data is for bbox, extracted from the training sets.
 kpu.init_yolo2(task, 0.5, 0.3, 5, anchor)
-kpu.init_yolo2(task_face, 0.5, 0.3, 5, anchor)
 
 print('[info]: Started.')
 but_stu = 1
@@ -136,7 +136,6 @@ try:
         #gc.collect()
         img = sensor.snapshot()
         code_obj = kpu.run_yolo2(task, img)
-        code_face = kpu.run_yolo2(task_face, img)
 
         if code_obj: # object detected
             max_id = 0
@@ -158,11 +157,6 @@ try:
                 isButtonPressedA = 1
         if but_a.value() == 1:
             isButtonPressedA = 0
-        if code_face: # face detected
-            max_id = 0
-            max_rect = 0
-            for i in code_face:
-                img.draw_rectangle(i.rect(),color=31)
 
         lcd.display(img)
 except KeyboardInterrupt:
