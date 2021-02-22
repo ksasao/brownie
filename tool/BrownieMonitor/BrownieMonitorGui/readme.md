@@ -7,7 +7,7 @@ QRコードで登録した英数文字列に相当する物体が検出された
 
 ## ダウンロード
 
-
+[BrownieMonitorGui_v1.0.zip](https://github.com/ksasao/brownie/releases/download/v2.2/BrownieMonitorGui_v1.0.zip) (2021/2/23更新)
 
 ## 利用方法
 
