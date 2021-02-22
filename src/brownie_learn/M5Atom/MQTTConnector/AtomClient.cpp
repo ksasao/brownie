@@ -5,6 +5,19 @@
 
 #include "AtomClient.h"
 
+typedef enum
+{
+  OFF,
+  BOOTING,
+  CONNECTING,
+  CONNECTED,
+  DISCONNECTED,
+  SENDING,
+  RECEIVING,
+  ERROR,
+  SAVING
+} BROWNIE_STATUS;
+
 const char hex[17]="0123456789ABCDEF";
 char id[100];
 String name;
@@ -51,12 +64,42 @@ void blink_led(uint8_t r, uint8_t g, uint8_t b, int duration, int count){
     delay(duration>>1);
   }
 }
-void error_led(){
-    blink_led(255,0,0,100,10);
+
+void setStatus(BROWNIE_STATUS status){
+  switch(status){
+    case OFF:
+      set_led(0,0,0);
+      break;
+    case BOOTING:
+      set_led(255,255,255);
+      break;
+    case CONNECTING:
+      blink_led(255,128,0,500,1);
+      break;
+    case CONNECTED:
+      set_led(0,0,255);
+      break;
+    case DISCONNECTED:
+      set_led(255,255,0);
+      break;
+    case SENDING:
+      set_led(0,255,0);
+      break;
+    case RECEIVING:
+      break;
+    case ERROR:
+      blink_led(255,0,0,100,10);
+      break;
+    case SAVING:
+      break;
+    default:
+      set_led(0,0,0);
+      break;
+  }
 }
 
 void mqttPublish(String topic, String data) {
-  set_led(0,255,0);
+  setStatus(SENDING);
 
   int length = data.length();
   data.toCharArray(msgBuffer,length+1);
@@ -67,14 +110,10 @@ void mqttPublish(String topic, String data) {
   Serial.print(topic);
   Serial.print(" ");
   Serial.println(data);
-  set_led(0,0,0);
+
+  setStatus(CONNECTED);
 }
 
-void reboot(){
-  Serial.println("Rebooting...");
-  delay(5 * 1000);
-  ESP.restart();
-}
 
 void initWiFi(){
   // WiFi connection
@@ -83,10 +122,10 @@ void initWiFi(){
   wifiConnected = true;
   while( WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
-    blink_led(255,128,0,500,1);
+    setStatus(CONNECTING);
     count++;
     if(count > 10){
-      error_led();
+      setStatus(ERROR);
       wifiConnected = false;
       break;
     }
@@ -95,18 +134,25 @@ void initWiFi(){
     Serial.println("Connected.");
     mqttClient.setServer(_server, 1883); 
     reConnect(false);
-    set_led(0,0,255);
+    setStatus(CONNECTED);
   }else{
     Serial.println();
     Serial.println("Connection error. Check WiFi settings.");
-    set_led(255,255,0);
+    setStatus(DISCONNECTED);
   }
+}
+
+void reboot(void){
+  Serial.println("Rebooting...");
+  setStatus(BOOTING);
+  delay(5 * 1000);
+  ESP.restart();
 }
 
 void reConnect(bool toReboot) {
   int resetCounter = 0;
   while (!mqttClient.connected()) {
-    set_led(255,255,0);
+    setStatus(CONNECTING);
     Serial.print("Attempting MQTT connection...");
 
     if (mqttClient.connect(clientIdChar,mqttUserName,mqttPass)) {
@@ -121,7 +167,7 @@ void reConnect(bool toReboot) {
       }
     }
     else {
-      error_led();
+      setStatus(ERROR);
       // http://pubsubclient.knolleary.net/api.html#state
       Serial.print("failed, state=");
       Serial.println(mqttClient.state());
@@ -137,7 +183,7 @@ void reConnect(bool toReboot) {
       }
     }
   }
-  set_led(0,0,0);
+  setStatus(CONNECTED);
 }
 
 // public methods
@@ -171,8 +217,11 @@ void AtomClient::reconnect(void){
 }
 void AtomClient::publish(String topic, String body){
   if(!wifiConnected){
-    set_led(255,255,0);
+    setStatus(CONNECTING);
     return;
   }
   mqttPublish(topic,body);
+}
+void AtomClient::reboot(void){
+  reboot();
 }

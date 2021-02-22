@@ -10,6 +10,7 @@ class AtomClient {
     void setup(String name, char* ssid, char* password, char* server);
     void reconnect(void);
     void publish(String topic, String body);
+    void reboot();
 };
 
 #endif
