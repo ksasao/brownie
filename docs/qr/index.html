@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+        <title>Brownie QR</title>
+        <style>
+        body{
+            position: absolute;
+            top: 0%;
+            left: 50%;
+            margin-right: -50%;
+            -webkit-transform: translate(-50%, 0%);
+            transform: translate(-50%, 0%);
+            font-family: sans-serif;
+            color: #773030;
+            background-color: #facd89;
+        }
+        #main{
+            width: 300px;
+            text-align: center;
+        }
+        .head{
+            text-align: right;
+            width: 20%;
+        }
+        table,td{
+            width: 100%;
+        }
+        input {
+            width: 100%;
+            border: none;
+            outline: none;
+        }
+        </style>
+    </head>
+
+    <body>
+        <div id="main">
+            <div id="data"></div>
+            <div id="qrcodeBuffer" style="display:none;"></div>
+            <div id="qrcode"><canvas id="qrcanvas" width="300px" height="300px"></canvas></div>
+            <div id="userform">
+                <form autocomplete="on" onsubmit="return false;">
+                    <table>
+                        <tr><td class="head">Command:</td><td>
+                            <button onclick="setQR('*reset')">*reset</button>
+                            <button onclick="setQR('*exclude')">*exclude</button>
+                            <button onclick="setQR('0')">0</button>
+                            <button onclick="setQR('100')">100</button>
+                        </td></tr>
+                        <tr><td class="head">Label:</td><td>
+                            <input id="label" type="text" placeholder="label to train" autocorrect="off" aria-label="QR">
+                        </td></tr>
+                    </table>
+                    <button type="submit" id="qrgen">OK</button>
+                </form>
+            </div>
+        </div>
+        <script>
+        function updateQR(str){
+            $("#data").text(str);
+            // Draw QR code with white margin
+            var margin = 30;
+            $("#qrcodeBuffer").html("");
+            $("#qrcodeBuffer").qrcode({width: qrcanvas.width - margin*2, height: qrcanvas.height - margin*2, text: str});
+            var src=$("#qrcodeBuffer canvas")[0];
+            var image = src.getContext('2d').getImageData(0,0,src.width,src.height);
+            var ctx = qrcanvas.getContext('2d');
+            ctx.fillStyle='white';
+            ctx.fillRect(0,0,qrcanvas.width,qrcanvas.height);
+            ctx.putImageData(image, margin,margin);
+            ctx.fill();
+        }
+        function setQRFromLabel(){
+            var str = $("#label").val().trim();
+            updateQR(str);
+        }
+        function setQR(str){
+            $("#label").text(str);
+            updateQR(str);
+        }
+        $("#qrgen").on("click",function(){
+            setQRFromLabel();
+        });
+        $(function(){
+            setQR("*reset");
+        });
+        </script>
+    </body>
+</html>
