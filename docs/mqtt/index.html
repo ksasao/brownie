@@ -38,16 +38,15 @@
             width: 280px;
             color: #777777;
             background-color: #ffffff;
-            font-size: 150%;
+            font-size: 80%;
             font-weight: bold;
-            margin-top: 10px;
-            padding-top: 10px;
             margin-top: 10px;
             padding-top: 10px;
             padding-left: 10px;
             padding-right: 10px;
             overflow-wrap: break-word;
             word-break: break-all;
+            text-align: left;
         }
         .head{
             text-align: right;
@@ -66,20 +65,16 @@
 
     <body>
         <div id="main">
-            <div id="navigation">QR | <a href="../ifttt">IFTTT</a> | <a href="../mqtt">MQTT</a></div>
+            <div id="navigation"><a href="../qr">QR</a> | <a href="../ifttt">IFTTT</a> | MQTT</div>
             <div id="data"></div>
             <div id="qrcodeBuffer" style="display:none;"></div>
             <div id="qrcode"><canvas id="qrcanvas" width="300px" height="300px"></canvas></div>
             <div id="userform">
                 <form autocomplete="on" onsubmit="return false;">
-                    <button onclick="setQR('*reset')">*reset</button>
-                    <button onclick="setQR('*exclude')">*exclude</button>
-                    <button onclick="setQR('0')">0</button>
-                    <button onclick="setQR('100')">100</button>
                     <table>
-                        <tr><td class="head">Label:</td><td>
-                            <input id="label" type="text" inputmode="url" placeholder="label to train" autocorrect="off" autocapitalize="off" aria-label="QR">
-                        </td></tr>
+                        <tr><td class="head">SSID:</td><td><input id="ssid" type="text" placeholder="your-ssid" autocorrect="off" autocapitalize="off"></td></tr>
+                        <tr><td class="head">PASS:</td><td><input id="pass" type="text" placeholder="your-password" autocorrect="off" autocapitalize="off"></td></tr>
+                        <tr><td class="head">MQTT:</td><td><input id="mqtt" type="text" placeholder="MQTT address" autocorrect="off" autocapitalize="off"></td></tr>
                     </table>
                     <button type="submit" id="qrgen">OK</button>
                 </form>
@@ -87,10 +82,16 @@
             <div id="footer">Brownie QR Generator  © 2019 <a href="https://twitter.com/ksasao">ksasao</a></div>
         </div>
         <script>
-        function updateQR(str){
+        function updateQR(){
+            var json = {};
+            json.ssid = $("#ssid").val().trim();
+            json.pass = $("#pass").val().trim();
+            json.mqtt = $("#mqtt").val().trim();
+            str = JSON.stringify(json);
             $("#data").text(str);
+
             // Draw QR code with white margin
-            var margin = 45;
+            var margin = 30;
             $("#qrcodeBuffer").html("");
             $("#qrcodeBuffer").qrcode({width: qrcanvas.width - margin*2, height: qrcanvas.height - margin*2, text: str});
             var src=$("#qrcodeBuffer canvas")[0];
@@ -101,19 +102,14 @@
             ctx.putImageData(image, margin,margin);
             ctx.fill();
         }
-        function setQRFromLabel(){
-            var str = $("#label").val().trim();
-            updateQR(str);
-        }
-        function setQR(str){
-            $("#label").text(str);
-            updateQR(str);
-        }
         $("#qrgen").on("click",function(){
-            setQRFromLabel();
+            updateQR();
+        });
+        $("input").blur(function(){
+            updateQR();
         });
         $(function(){
-            setQR("*reset");
+            updateQR();
         });
         </script>
     </body>

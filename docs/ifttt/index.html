@@ -18,9 +18,35 @@
             color: #773030;
             background-color: #facd89;
         }
+        a {
+            color:#773030;
+        }
         #main{
             width: 300px;
             text-align: center;
+        }
+        #navigation{
+            font-size: 90%;
+            text-align: left;
+        }
+        #footer{
+            font-size: 80%;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+        #data{
+            width: 280px;
+            color: #777777;
+            background-color: #ffffff;
+            font-size: 80%;
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            overflow-wrap: break-word;
+            word-break: break-all;
+            text-align: left;
         }
         .head{
             text-align: right;
@@ -39,6 +65,7 @@
 
     <body>
         <div id="main">
+            <div id="navigation"><a href="../qr">QR</a> | IFTTT | <a href="../mqtt">MQTT</a></div>
             <div id="data"></div>
             <div id="qrcodeBuffer" style="display:none;"></div>
             <div id="qrcode"><canvas id="qrcanvas" width="300px" height="300px"></canvas></div>
@@ -52,6 +79,7 @@
                     <button type="submit" id="qrgen">OK</button>
                 </form>
             </div>
+            <div id="footer">Brownie QR Generator  © 2019 <a href="https://twitter.com/ksasao">ksasao</a></div>
         </div>
         <script>
         function updateQR(){
