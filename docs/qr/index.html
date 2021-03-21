@@ -74,14 +74,14 @@
             <div id="qrcodeBuffer" style="display:none;"></div>
             <div id="qrcode"><canvas id="qrcanvas" width="300px" height="300px"></canvas></div>
             <div id="userform">
-                <form autocomplete="on" onsubmit="return false;">
+                <form onsubmit="return false;">
                     <button onclick="setQR('*reset')">*reset</button>
                     <button onclick="setQR('*exclude')">*exclude</button>
                     <button onclick="setQR('0')">0</button>
                     <button onclick="setQR('100')">100</button>
                     <table>
                         <tr><td class="head">Label:</td><td>
-                            <input id="label" type="text" inputmode="url" placeholder="label to train" autocorrect="off" autocapitalize="off" aria-label="QR">
+                            <input id="label" type="text" inputmode="url" placeholder="label to train" autocomplete="on" autocorrect="off" autocapitalize="off" aria-label="QR">
                         </td></tr>
                     </table>
                     <button type="submit" id="qrgen">OK</button>
