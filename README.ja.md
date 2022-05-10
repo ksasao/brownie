@@ -1,6 +1,7 @@
 [English](README.md)/日本語
 # Brownie
 Brownie (ブラウニー) はオフラインで物体検出を行う M5StickV 専用アプリです。かわいい声でモノの名前を教えてくれます！
+2021年以降の M5StickV をお持ちの場合は [Brownie TMMF 2020](https://github.com/ksasao/brownie/blob/master/src/brownie_learn/doc/TMMF2020/readme.md) をご利用ください。ファームウェアが異なります。
 
 - [Maker Faire Taipei 2019 Kit](https://github.com/ksasao/brownie/releases/tag/v2.0) をダウンロード!
 
