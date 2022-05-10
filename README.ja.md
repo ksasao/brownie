@@ -19,8 +19,8 @@ Brownie (ブラウニー) はオフラインで物体検出を行う M5StickV �
 以上です!
 
 ### うまく動きませんか？
-- 2019年11月時点での最新ファームウェアではうまく動作しないことが確認されています。http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.4.0_47_g39bb8bf の maixpy_v0.4.0_47_g39bb8bf_m5stickv.bin を [
-kflash_gui](https://github.com/sipeed/kflash_gui) (Windows/Mac/Linux版があります) などで書き込んでみてください。
+- 2019年11月時点での最新ファームウェアではうまく動作しないことが確認されています。[maixpy_v0.4.0_47_g39bb8bf_m5stickv.bin](https://github.com/ksasao/brownie/raw/master/materials/maixpy_v0.4.0_47_g39bb8bf_m5stickv.bin) を [
+kflash_gui](https://docs.m5stack.com/en/quick_start/m5stickv/maixpy) (Windows/Mac/Linux版があります) などで書き込んでみてください。
 
 ## 遊び方
 カメラをものに向けてAボタン(いちばん大きいボタン)を押してください。
