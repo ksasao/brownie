@@ -3,7 +3,7 @@ Brownie Learn is an app that can learn your objects.
 
 ## How to setup
 1. Update firmware to M5StickV_Firmware_v5.1.2.kfpkg
-https://docs.m5stack.com/#/en/quick_start/m5stickv/m5stickv_quick_start . You can also use EasyLoader (for Windows).
+https://docs.m5stack.com/en/quick_start/m5stickv/maixpy . You can also use EasyLoader (for Windows).
 2. Copy files in the brownie_learn directory into microSD card
 3. run!
 
