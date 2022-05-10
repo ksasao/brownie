@@ -9,7 +9,7 @@ Brownie は QRコードを使って簡単に画像を学習し、その画像に
 ![動作概要](usecase.png)
 
 ## 内容物
-1. M5StickV ([maixpy_v0.5.0_9_g8eba07d_m5stickv.bin](http://dl.sipeed.com/MAIX/MaixPy/release/master/maixpy_v0.5.0_9_g8eba07d) 導入済み)
+1. M5StickV ([maixpy_v0.5.0_9_g8eba07d_m5stickv.bin](https://github.com/ksasao/brownie/raw/master/materials/maixpy_v0.5.0_9_g8eba07d_m5stickv.bin) もしくは [M5StickV Maixpy Quick Start](https://docs.m5stack.com/en/quick_start/m5stickv/maixpy)にある Firmware ([M5StickV_Firmware_v5.1.2.kfpkg](https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/docs/M5StickV_Firmware_v5.1.2.kfpkg)) 導入済み)
 2. Lexar microSDHC 32GB ([Brownie](https://github.com/ksasao/brownie/tree/master/src/brownie_learn/M5StickV)書き込み済みのものが M5StickVに挿入されています)
 3. M5StickC ([WiFiアプリケーション](https://github.com/ksasao/brownie/tree/master/src/brownie_learn/M5StickC/IFTTTConnector)書き込み済み)
 4. USB type-C ケーブル
