@@ -15,6 +15,6 @@
   "dependencies": {
     "log4js": "^6.3.0",
     "serialport": "^8.0.8",
-    "socket.io": "^2.4.0"
+    "socket.io": "^2.5.0"
   }
 }
