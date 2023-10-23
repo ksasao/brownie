@@ -13,7 +13,7 @@
     "path": "tree/master/tool/BrownieMonitor/BrownieMonitorNodeJs"
   },
   "dependencies": {
-    "log4js": "^6.3.0",
+    "log4js": "^6.4.0",
     "serialport": "^8.0.8",
     "socket.io": "^2.4.0"
   }
